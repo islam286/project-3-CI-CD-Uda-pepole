@@ -65,6 +65,7 @@ jobs:
           commands: |
             cd backend
             npm install
+            npm audit fix -f
             npm run test
             
           
