@@ -44,11 +44,11 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: front-end test
+          name: front-end unit test
           command: |
             cd frontend
             npm install
-            npm run test
+            npm test
 
 
   test-backend:
@@ -59,11 +59,11 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run :
-        name: back-end test
+        name: back-end unit test
         commands: |
           cd backend
           npm install
-          npm run test
+          npm test
           
 workflows:
   my-workflow:
