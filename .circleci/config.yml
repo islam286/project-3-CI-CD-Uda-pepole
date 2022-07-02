@@ -62,7 +62,7 @@ jobs:
             backend-build
       - run :
           name: back-end unit test
-          commands: |
+          command: |
             cd backend
             npm install
             npm audit fix -f
