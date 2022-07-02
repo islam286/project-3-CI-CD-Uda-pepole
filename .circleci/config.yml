@@ -48,7 +48,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm test
+            npm run test
 
 
   test-backend:
@@ -63,7 +63,7 @@ jobs:
           commands: |
             cd backend
             npm install
-            npm test
+            npm run test
           
 workflows:
   my-workflow:
