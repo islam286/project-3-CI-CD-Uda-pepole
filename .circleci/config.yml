@@ -65,7 +65,8 @@ jobs:
           commands: |
             cd backend
             npm install
-            npm runtest
+            npm run test
+            
           
 workflows:
   my-workflow:
