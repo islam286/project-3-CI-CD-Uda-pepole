@@ -27,6 +27,28 @@ commands:
             aws s3 rm s3://udapeople-<< parameters.Workflow_ID >> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
 
+
+  install_ansible:
+    description: "Installs Ansible on Ubuntu images"
+    steps:
+      - run: 
+          name: "Install Ansible"
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible -y
+
+  install_awscli:
+    description: "Installs AWS_CLI"
+    steps:
+      - run: 
+          name: "Install AWS CLI"
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install-
+
 jobs:
   build-frontend:
     docker:
@@ -170,7 +192,26 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environment     
+      - destroy-environment
+
+  configure-infrastructure:
+    docker:
+      - image: cimg/base:2022.04
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["74:fb:ac:e6:c4:f9:79:f9:ad:65:da:2a:b1:27:7e:8c"]
+      - install_ansible
+      - install_awscli
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-enviroment          
 
   notify_on_success:
     docker:
