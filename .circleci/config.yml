@@ -48,7 +48,7 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-            
+
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
@@ -60,7 +60,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/R3by8dnVoPGwzahYCSzQk/migration-<< parameters.Workflow_ID >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/4JxzV4bJVyYY4dXsZYaikP/migration-<< parameters.Workflow_ID >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -254,7 +254,8 @@ jobs:
             then
               curl -d '1' https://kvdb.io/4JxzV4bJVyYY4dXsZYaikP/migration_${CIRCLE_WORKFLOW_ID:0:7} 
             fi
-      - destroy-environment   
+      - destroy-environment
+      - revert-migrations 
   deploy-frontend:
     docker:
       - image: amazon/aws-cli
@@ -287,7 +288,7 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
-      - revert-migrations
+
   notify_on_success:
     docker:
       - image: cimg/base:2022.04
