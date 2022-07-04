@@ -48,7 +48,7 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-            
+
   install_nodejs:
     description: "This command installs NodeJS on the docker image"
     steps:
@@ -299,6 +299,44 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
+  deploy-backend:
+    docker:
+      - image: cimg/base:2022.04
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible
+      - install_nodejs
+      - add_ssh_keys:
+          fingerprints: ["74:fb:ac:e6:c4:f9:79:f9:ad:65:da:2a:b1:27:7e:8c"]
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
+      - run:
+          name: package backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ../
+            tar -czf artifact.tar.gz backend
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/tasks/files
+      - run:
+          name: Deploy backend
+          command: |
+            export TYPEORM_MIGRATIONS_DIR=.migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy-environment
+      - revert-migrations
 
   notify_on_success:
     docker:
@@ -330,7 +368,9 @@ workflows:
       - run-migrations:
           requires: [configure-infrastructure] 
       - deploy-frontend:
-          requires: [run-migrations]        
+          requires: [run-migrations]      
+      - deploy-backend:
+          requires: [run-migrations]  
       # #- notify_on_success:
       #     requires:            
       #       - build-frontend
