@@ -48,6 +48,15 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
+            
+  install_nodejs:
+    description: "This command installs NodeJS on the docker image"
+    steps:
+      - run:
+          name: "Installing node js"
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+            sudo apt install -y nodejs
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
