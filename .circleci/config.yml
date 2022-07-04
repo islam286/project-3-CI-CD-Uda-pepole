@@ -299,6 +299,7 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations
+
   deploy-backend:
     docker:
       - image: cimg/base:2022.04
@@ -324,13 +325,9 @@ jobs:
             cd backend
             npm i
             npm run build
-            cd ..
-            tar -czvf artifact.tar.gz .
+            cd ../
+            tar -czf artifact.tar.gz backend
             cp artifact.tar.gz .circleci/ansible/roles/deploy/tasks/files
-
-           # cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-
-
       - run:
           name: Deploy backend
           command: |
@@ -341,6 +338,7 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment
       - revert-migrations
+
 
   smoke-test:
     docker:
