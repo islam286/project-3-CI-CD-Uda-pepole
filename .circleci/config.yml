@@ -69,7 +69,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/U1qKXLELzYkKtBhyeLzoMt/migration-<< parameters.Workflow_ID >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/F5yPQpav8YCgHBkFgJJdjg/migration-<< parameters.Workflow_ID >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -261,7 +261,7 @@ jobs:
             cd backend
             if grep -q "No migrations are pending" migrations_output.txt
             then
-              curl -d '1' https://kvdb.io/U1qKXLELzYkKtBhyeLzoMt/migration_${CIRCLE_WORKFLOW_ID:0:7} 
+              curl -d '1' https://kvdb.io/F5yPQpav8YCgHBkFgJJdjg/migration_${CIRCLE_WORKFLOW_ID:0:7} 
             fi
       - destroy-environment
       - revert-migrations 
@@ -390,7 +390,7 @@ jobs:
                       list-exports --query "Exports[?Name==`WorkflowID`].Value" \
                       --no-paginate --output text)
             echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
-            curl https://kvdb.io/U1qKXLELzYkKtBhyeLzoMt/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+            curl https://kvdb.io/F5yPQpav8YCgHBkFgJJdjg/old_workflow_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
           command: |
@@ -417,7 +417,7 @@ jobs:
                   --query "StackSummaries[*].StackName" \
                   --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
               echo Stack names: "${STACKS[@]}"
-              export OldWorkflowID=$(curl --insecure https://kvdb.io/U1qKXLELzYkKtBhyeLzoMt/old_workflow_id)
+              export OldWorkflowID=$(curl --insecure https://kvdb.io/F5yPQpav8YCgHBkFgJJdjg/old_workflow_id)
               echo Old Workflow ID: $OldWorkflowID 
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
