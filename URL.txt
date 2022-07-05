@@ -1,0 +1,14 @@
+[URL 1]:
+https://github.com/islam286/project-3-CI-CD-Uda-pepole.git
+
+[URL 2]:
+http://udapeople-72e9a2e.s3-website-us-east-1.amazonaws.com
+
+[URL 3]:
+http://d15ithgl382y5p.cloudfront.net
+
+[URL 4]:
+https://44.201.163.59:3030/api/status
+
+[URL 5]:
+http://ec2-34-227-106-225.compute-1.amazonaws.com:9090/
