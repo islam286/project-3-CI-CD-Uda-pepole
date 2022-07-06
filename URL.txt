@@ -11,4 +11,4 @@ http://d15ithgl382y5p.cloudfront.net
 https://44.201.163.59:3030/api/status
 
 [URL 5]:
-http://ec2-34-227-106-225.compute-1.amazonaws.com:9090/
+http://ec2-44-202-51-166.compute-1.amazonaws.com:9090/
